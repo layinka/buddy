@@ -1,0 +1,12 @@
+{
+    "description": "LearnMultiChainDapp.", 
+    "external_url": "https://openseacreatures.io/3", 
+    "image": "https://picsum.photos/id/237/600/600", 
+    "name": "Yin Tan",
+    "attributes": [ 
+          {
+              "trait_type": "Face",
+              "value": "White"
+          }
+      ]
+}
