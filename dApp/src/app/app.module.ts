@@ -6,18 +6,15 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { W3mButtonComponent } from './w3m-button/w3m-button.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CreateAuctionComponent } from './create-auction/create-auction.component';
-import { ViewAuctionComponent } from './view-auction/view-auction.component';
 import {HttpClientModule} from '@angular/common/http';
-import { AuctionListComponent } from './auction-list/auction-list.component'
+import { SignupComponent } from './signup/signup.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     W3mButtonComponent,
-    CreateAuctionComponent,
-    ViewAuctionComponent,
-    AuctionListComponent
+    SignupComponent
   ],
   imports: [
     BrowserModule,

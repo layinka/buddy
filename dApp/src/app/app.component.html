@@ -11,10 +11,13 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['create-auction']">Create Auction</a>
+          <a class="nav-link" [routerLink]="['signup']">Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['list-auction']">View Auctions</a>
+          <a class="nav-link" [routerLink]="['buy']">Buy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['sell']">Sell</a>
         </li>
         <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,11 +54,14 @@
   </div>
 </nav>
 
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+<!-- <ngx-spinner type="square-jelly-box" size = "medium"><p style="color: white" > Working... </p></ngx-spinner> -->
+<ngx-spinner type="ball-scale-multiple"><p style="color: white" > Loading... </p></ngx-spinner>
 
 <div class="container">
   <div class="row">
     <div class="col d-flex justify-content-center mb-3 mt-2">
-      <h3>Auction dAPP</h3>
+      <h3>Buddy P2P dAPP</h3>
     </div>
   </div>
 

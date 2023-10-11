@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/html'
-import { configureChains, createConfig, getAccount, getNetwork, watchAccount, watchNetwork } from '@wagmi/core'
+import { configureChains, createConfig, erc20ABI, erc721ABI, fetchToken, getAccount, getContract, getNetwork, Unit, watchAccount, watchNetwork } from '@wagmi/core'
 import { arbitrum, hardhat, mainnet, polygon, scrollSepolia, scrollTestnet, mantle, mantleTestnet } from '@wagmi/core/chains'
 import { BehaviorSubject } from 'rxjs';
 
@@ -78,6 +78,41 @@ export class Web3Service {
         }
       })
     }, 200)
+  }
+
+
+  
+  async getTokenInfo(tokenAddress: `0x${string}`, chainId: number|undefined=undefined, formatUnits: Unit | undefined = undefined) {
+    return await fetchToken({
+      address: tokenAddress,
+      chainId,
+      formatUnits
+    });
+  }
+
+  async getERC20Contract(tokenAddress: `0x${string}`, chainId?: number|undefined,  walletClient?: any) {
+    return await getContract({
+      address: tokenAddress,
+      abi: erc20ABI,
+      chainId,
+      // publicClient,
+      walletClient
+    })
+  }
+
+  async getERC721TokenInfo(tokenAddress: `0x${string}`, chainId?: number|undefined) {
+    const erc721 = await getContract({
+      address: tokenAddress,
+      abi: erc721ABI,
+      chainId
+    })
+
+    return ({
+      address: tokenAddress,
+      name: await erc721.read.name(),
+      symbol: await erc721.read.symbol()
+      
+    });
   }
 
 
