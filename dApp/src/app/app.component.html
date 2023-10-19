@@ -1,7 +1,7 @@
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #674ecc !important">
   <div class="container">
-    <a class="navbar-brand" href="/">Buddy</a>
+    <a class="navbar-brand text-white" href="/"><b>Buddy</b></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -38,7 +38,7 @@
       <div class="d-flex justify-content-end align-items-center">
 
         
-        <div class="mx-2" *ngIf="balance">Balance: {{balance.formatted | number: '0.2-4'}} {{balance.symbol}}</div>
+        <div class="mx-2 text-white" *ngIf="balance">Balance: {{balance.formatted | number: '0.2-4'}} {{balance.symbol}}</div>
 
         <select class="mx-2 " [ngModel]="selectedNetwork" (ngModelChange)="onSwitchNetwork($event)">
           <option value="">Choose Network</option>
@@ -59,11 +59,11 @@
 <ngx-spinner type="ball-scale-multiple"><p style="color: white" > Loading... </p></ngx-spinner>
 
 <div class="container">
-  <div class="row">
+  <!-- <div class="row">
     <div class="col d-flex justify-content-center mb-3 mt-2">
       <h3>Buddy P2P dAPP</h3>
     </div>
-  </div>
+  </div> -->
 
   <div class="row">
     <div class="col-12">

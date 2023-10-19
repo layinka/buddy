@@ -24,6 +24,7 @@ const config: HardhatUserConfig = {
 						},
 					},
 					viaIR: true,
+					evmVersion: 'london'
 				},
 			},
 		],
@@ -104,6 +105,18 @@ const config: HardhatUserConfig = {
 			accounts:
 				process.env.PRIVATE_KEY_FTM_1 !== undefined ? [process.env.PRIVATE_KEY_FTM_1, process.env.PRIVATE_KEY!] : [],
 			chainId: 250,
+		},
+
+		mantle_t: {
+			url: "https://rpc.testnet.mantle.xyz/",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			chainId: 5001,
+		}, 
+
+		scroll_sep_t: {
+			url: "https://sepolia-rpc.scroll.io",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			chainId: 534351,
 		},
 	}),
 	paths: {

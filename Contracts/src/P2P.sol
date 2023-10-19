@@ -12,7 +12,7 @@ contract P2P is Ownable {
 	uint256 listId;
 
 	struct paymentOption {
-		string appName;
+		string appName; 
 		string paymentInstruction;
 	}
 
@@ -46,6 +46,7 @@ contract P2P is Ownable {
 		uint256 locked;
 		uint256 price;
 		uint256 priceCurrency;
+		
 		uint256 time;
 	}
 

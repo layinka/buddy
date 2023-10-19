@@ -1,31 +1,21 @@
-<div class="h-screen py-28 bg-[#1E1e1e]  bg-center">
-    <div class="w-[80%] rounded-xl mx-auto bg-[#000]/30 backdrop-blur-md p-5 border border-gray-600">
-      <div class="mx-auto flex gap-14 px-3 py-5">
-        <div class="flex-[0.33] bg-gradient-to-b from-[#3f013e] via-[#823782] to-[#3600b5]  rounded-xl px-9 py-6 flex flex-col justify-between">
+<div class="h-screen py-28 bg-[#1E1e1e]  bg-center" >
+    <div class="w-75 rounded-xl mx-auto p-5 border border-gray-600" > <!--style="background-color: #523ab2;"-->
+      <div class="mx-auto  p-2">
+
+        <div class="row">
+          <div class="col d-flex justify-content-center mb-3 mt-2">
+            <h3>Buddy P2P dAPP</h3>
+          </div>
+        </div>
+
+        <div class="rounded-xl p-2 justify-between">
           <div>
-            <h2 class="text-white text-3xl font-semibold mb-4">
+            <h2 class="text-3xl font-semibold mb-4">
               Start your crypto journey with us.
             </h2>
             <p class="text-gray-300 text-base">
-              Discover the world best... some random paragraph we gonna write
-              here about our application.
+              Easily Swap your FIAT Currency for any Crypto Currency - We support several Payment methods
             </p>
-          </div>
-
-          <div class="bg-[#470752] py-3 px-4 rounded-lg">
-            <p class="text-white text-sm mb-4">
-              Simply unbelievable!! I am really satisfied with my projects and
-              business.This is absolutely wonderful
-            </p>
-            <div class="flex gap-2">
-              <img
-                src="https://picsum.photos/id/107/100/100"
-                
-                class="img-fluid rounded-xl "
-                alt="me"
-              />
-              
-            </div>
           </div>
         </div>
         <div class="flex-[0.67] pr-10 py-4" *ngIf="registrationForm">
@@ -62,38 +52,38 @@
                     Payment Methods
                 </label>
 
-                <div class="d-flex w-full gap-4 items-center mb-4">
+                <div class="row  mb-4">
                     <div
                     (click)="paytmClicked()"
-                    class="border border-gray-400 bg-gray-300  rounded-lg py-4 px-6 cursor-pointer hover:bg-white"
+                    class="border border-gray-400 bg-gray-300  col-6 col-md-2 rounded-lg p-2 cursor-pointer m-2 hover:bg-white"
                     >
                     <img src="/assets/images/payment-icons/paytm.png" class="payment-method-img img-fluid"  alt="paytm" />
                     </div>
                 
                     <div
                     (click)="phonepeClicked()"
-                    class="border border-gray-400 bg-gray-300  rounded-lg py-2 px-6 cursor-pointer hover:bg-white"
+                    class="border border-gray-400 bg-gray-300  col-6 col-md-2 rounded-lg p-2 cursor-pointer m-2 hover:bg-white"
                     >
                     <img src="/assets/images/payment-icons/phonepe.png" class="payment-method-img img-fluid"  alt="phonepe" />
                     </div>
 
                     <div
                     (click)="bankAccountClicked()"
-                    class="border border-gray-400 bg-gray-300  rounded-lg py-2 px-6 cursor-pointer hover:bg-white"
+                    class="border border-gray-400 bg-gray-300  col-6 col-md-2 rounded-lg p-2 cursor-pointer m-2 hover:bg-white"
                     >
                     <img src="/assets/images/payment-icons/bank-account.png" class="payment-method-img img-fluid"  alt="Bank Account" />
                     </div>
                 
                     <div
                     (click)="gpayClicked()"
-                    class="border border-gray-400 bg-gray-300 rounded-lg py-2 px-6 cursor-pointer hover:bg-white"
+                    class="border border-gray-400 bg-gray-300 col-6 col-md-2 rounded-lg p-2 cursor-pointer m-2 hover:bg-white"
                     >
                     <img src="/assets/images/payment-icons/gpay.png" class="payment-method-img img-fluid"  alt="gpay" />
                     </div>
                 
                     <div
                     (click)="paypalClicked()"
-                    class="border border-gray-400 bg-gray-300  rounded-lg py-2 px-6 cursor-pointer hover:bg-white"
+                    class="border border-gray-400 bg-gray-300  col-6 col-md-2 rounded-lg p-2 cursor-pointer m-2 hover:bg-white"
                     >
                     <img src="/assets/images/payment-icons/paypal.png" class="payment-method-img img-fluid"  alt="paypal" />
                     </div>
