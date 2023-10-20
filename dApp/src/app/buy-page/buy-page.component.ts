@@ -3,12 +3,14 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { combineLatest } from 'rxjs';
 import { SupportedCoins } from 'src/app/models/supported-coins';
 import { FiatCurrencies } from 'src/app/models/supported-fiats';
 import { AppToastService } from 'src/app/services/app-toast.service';
 import { P2pService } from 'src/app/services/p2p.service';
 import { Web3Service } from 'src/app/services/web3.service';
 import { BuyModalComponent } from '../buy-modal/buy-modal.component';
+
 
 @Component({
   selector: 'app-buy-page',
@@ -45,6 +47,7 @@ export class BuyPageComponent {
   listings : any[]|undefined = undefined
 
   sellerPayments: any;
+  unsubscribeChain: any;
 
   constructor(private formBuilder: FormBuilder,
     private w3s: Web3Service,
@@ -69,23 +72,27 @@ export class BuyPageComponent {
   
   ngOnInit(): void {
 
-    
-
-    setTimeout(async ()=>{
-      this.nativeCurrency=this.w3s.chains.find(ff=>ff.id == this.w3s.chainId)?.nativeCurrency    
+    this.unsubscribeChain =  combineLatest([ this.w3s.chainId$, this.w3s.account$]).subscribe(async ([chainId, account])=>{
+      if(!chainId || !account) return
+      this.nativeCurrency=this.w3s.chains.find(ff=>ff.id == chainId)?.nativeCurrency    
 
       this.p2pContract = await this.p2p.getP2PContract()
-      this.alreadyRegistered = await this.p2pContract.read.isRegistered([this.w3s.account])
+      this.alreadyRegistered = await this.p2pContract.read.isRegistered([account])
       this.coins = SupportedCoins[this.w3s.chainId!]
       this.selectedCoin = this.coins[0]
       this.selectedFiat = this.fiatCurrencies[0]
 
       this.listings = await this.p2p.getListings(this.selectedFiat!.id, this.nativeCurrency.symbol)
 
-      this.sellerPayments = await this.p2pContract.read.sellerPayments([this.w3s.account]) 
+      this.sellerPayments = await this.p2pContract.read.sellerPayments([account]) 
       
+    })
 
-    }, 400)
+  }
+
+  
+  ngOnDestroy(){
+    this.unsubscribeChain?.unsubscribe();
   }
 
 

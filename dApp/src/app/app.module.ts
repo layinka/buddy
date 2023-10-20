@@ -17,6 +17,7 @@ import { BuyPageComponent } from './buy-page/buy-page.component';
 import { OrderPageComponent } from './order-page/order-page.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastsComponent } from './toasts/toasts.component';
+import { NextIdProfileComponent } from './next-id-profile/next-id-profile.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ToastsComponent } from './toasts/toasts.component';
     BuyModalComponent,
     BuyPageComponent,
     OrderPageComponent,
-    ToastsComponent
+    ToastsComponent,
+    NextIdProfileComponent
   ],
   imports: [
     BrowserModule,

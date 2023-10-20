@@ -1,0 +1,84 @@
+<div class="modal-header" *ngIf="listing" >
+    <h3 class="modal-title">Buy {{listing.symbol}}  </h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Close')"></button>
+</div>
+  
+<form class="form p-3" *ngIf="form && listing" [formGroup]="form" (ngSubmit)="onSubmit(form)">
+  
+  <div class="modal-body">
+    <div class="row">
+      <div class="col p-2" >
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="bg-[#1e1e1e] rounded-lg py-2 px-2">
+                        <h3 class="text-gray-400 font-semibold mb-2 text-sm">
+                            <strong>Token :</strong>
+                            <span class="text-sm  ml-2">
+                                {{listing.symbol}} 
+                            </span>
+                            <span class="text-xs ms-1" *ngIf="listing.tokenAddress!=='0x0000000000000000000000000000000000000000'">                                
+                                
+                                ({{ listing.tokenAddress}})
+                            </span>
+                        </h3>
+                        <h3 class="text-gray-400 font-semibold mb-2 text-sm">
+                          <strong>Token Price:</strong>
+                          <span class="text-sm ms-2">{{listing.price| number:'1.0-8'}} {{fiatCurrencies[listing.priceCurrency].code}} </span>
+                        </h3>
+                        <h3 class="text-gray-400 font-semibold text-sm ">
+                          <strong>Available :</strong>
+                          <span class="text-sm ms-2">{{listing.amount | number:'1.0-8'}} {{listing.symbol}}</span>
+                        </h3>
+                      </div>
+                </div>
+            </div>
+          
+            <div class="mt-3 mb-3">
+                <label for="amount" class="form-label">Amount ({{listing.symbol}} ) *</label>
+                <input type="number" placeholder="Amount"  formControlName="amount" class="form-control" id="amount" aria-describedby="amountHint">                
+                <div class="form-text" id="nameHint">  {{ ( listing.price  * fv?.amount ) | number : '1.0-8' }} {{fiatCurrencies[listing.priceCurrency].code }}</div> 
+                
+  
+                <div class="error-message" *ngIf="form.get('amount')?.invalid && form.get('amount')?.touched">
+                  <div *ngFor="let error of  objectKeys(form.get('amount')?.errors)">                                        
+                      {{validationMessages.amount[error]}}
+                  </div>
+                </div>
+            </div>
+
+            <div>
+                <label htmlFor="payment" class="font-semibold text-sm mb-1 text-gray-400">
+                    Payment Methods
+                </label>
+
+                <div class="d-flex  gap-4 justify-content-start align-items-center mb-4 p-2 px-3">
+                    <ng-container *ngFor="let payOption of paymentOptions" >
+                        <div [ngClass]="{'selected-payment': payOption==selectedPaymentOption }" *ngIf="supportsPaymentOption(payOption)" (click)="paymentOptionSelected(payOption)"
+                          class="border border-gray-400 bg-gray-300  rounded-lg py-4 px-4 cursor-pointer hover:bg-white" 
+                            >
+                            <img  [src]="'/assets/images/payment-icons/'+ payOption+ '.png'" class="payment-method-img img-fluid"  [alt]="payOption" />
+                        </div>
+                    </ng-container>
+                </div>
+
+                
+
+                
+                
+            </div>
+              
+            
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    
+    <button type="submit" class="btn btn-primary bg-[#0a58ca] hover:bg-[#0a88ca]" [disabled]=" form.invalid ">Take Offer</button>
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+  
+  
+  </form>
+  
+  

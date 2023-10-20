@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getWalletClient, getPublicClient, fetchTransaction, writeContract, waitForTransaction } from '@wagmi/core';
+import { getWalletClient, getPublicClient, fetchTransaction, writeContract, waitForTransaction, signMessage } from '@wagmi/core';
 import { ethers } from 'ethers';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { combineLatest } from 'rxjs';
 
 import { AppToastService } from 'src/app/services/app-toast.service';
 import { P2pService } from 'src/app/services/p2p.service';
@@ -11,8 +12,41 @@ import { Web3Service } from 'src/app/services/web3.service';
 import { delay } from 'src/app/utils/delay';
 import { environment } from 'src/environments/environment';
 import { zeroAddress, parseAbiItem } from 'viem';
+import { NextIdProfile } from '../models';
+import { NextIdService } from '../services/next-id.service';
+import { getEthersSigner } from '../utils/ethers-wagmi-adapter';
+import secp256k1 from 'secp256k1';
+import EthCrypto from 'eth-crypto';
+
 const P2pABI = require( "../../assets/abis/p2p.json");
 
+const { randomBytes } = require('crypto')
+
+
+function test(){
+  // or require('secp256k1/elliptic')
+//   if you want to use pure js implementation in node
+
+// generate message to sign
+// message should have 32-byte length, if you have some other length you can hash message
+// for example `msg = sha256(rawMessage)`
+const msg = randomBytes(32)
+
+// generate privKey
+let privKey
+do {
+  privKey = randomBytes(32)
+} while (!secp256k1.privateKeyVerify(privKey))
+
+// get the public key in a compressed format
+const pubKey = secp256k1.publicKeyCreate(privKey)
+
+// sign the message
+const sigObj = secp256k1.ecdsaSign(msg, privKey)
+
+// verify the signature
+console.log(secp256k1.ecdsaVerify(sigObj.signature, msg, pubKey))
+}
 
 
 
@@ -45,13 +79,17 @@ export class SignupComponent {
   p2pContract: any;
   alreadyRegistered = false;
 
+  profiles?: NextIdProfile[];
+  unsubscribeChain: any;
+
   constructor(private formBuilder: FormBuilder,
-    private w3s: Web3Service,
+    public w3s: Web3Service,
     private route: ActivatedRoute,
     private router: Router,
     private spinner: NgxSpinnerService,
     private toastService: AppToastService,
-    private p2p: P2pService) {
+    private p2p: P2pService,
+    private nextIdService: NextIdService) {
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -66,14 +104,45 @@ export class SignupComponent {
   }
 
   ngOnInit(): void {
-    setTimeout(async ()=>{
+
+    this.unsubscribeChain =  combineLatest([ this.w3s.chainId$, this.w3s.account$]).subscribe(async ([chainId, account])=>{
+      if(!(chainId && account)) return
+
+      // let avatarPrivKey
+      // do {
+      //   avatarPrivKey = randomBytes(32)
+      // } while (!secp256k1.privateKeyVerify(avatarPrivKey))
+
+      // console.log('priv key1:', avatarPrivKey.toString('hex') , ', length: ', avatarPrivKey.toString('hex').length, ' ,  len2: ', '0x107be946709e41b7895eea9f2dacf998a0a9124acbb786f0fd1a826101581a07'.length)
+      // console.log('priv key:', Buffer.from(avatarPrivKey, 'hex').toString())
+
+      // const publicKey = EthCrypto.publicKeyByPrivateKey( '0x' + avatarPrivKey.toString('hex')
+      //   //'0x107be946709e41b7895eea9f2dacf998a0a9124acbb786f0fd1a826101581a07'
+      // );
+
+      
+      // console.log('pub key:', publicKey)
+
+      // // const testPubKey = secp256k1.publicKeyCreate( avatarPrivKey )
+      // // Buffer.from(testPubKey).toString('hex')
+      // // console.log('pub key:', testPubKey)
+
+      
       this.p2pContract = await this.p2p.getP2PContract()      
       this.alreadyRegistered = await this.p2pContract.read.isRegistered([this.w3s.account])
 
-    }, 400)
+      this.nextIdService.getProfiles(this.w3s.account!).subscribe((profs)=>{
+        this.profiles= profs
+      }) 
+      
+    })
+    
   }
 
   
+  ngOnDestroy(){
+    this.unsubscribeChain?.unsubscribe();
+  }
 
   paytmClicked() {
     const t= this.showPaytm
@@ -113,7 +182,9 @@ export class SignupComponent {
     this.showBankAccount=false;
   }
 
-  
+  async bindEthereum() {
+    await this.nextIdService.bindEthereum(this.w3s.account!)
+  }
   
   // convenience getter for easy access to form fields
   get f() { return this.registrationForm.controls; }
@@ -219,6 +290,33 @@ export class SignupComponent {
       this.toastService.error('Failed', 'Registration Failed!')
       
     }
+  }
+
+
+  async registerNextId(){
+    // or require('secp256k1/elliptic')
+    //   if you want to use pure js implementation in node
+
+    // generate message to sign
+    // message should have 32-byte length, if you have some other length you can hash message
+    // for example `msg = sha256(rawMessage)`
+    const msg = randomBytes(32)
+
+    // generate privKey
+    let privKey
+    let pubKey
+    do {
+      privKey = randomBytes(32)
+    } while (!secp256k1.privateKeyVerify(privKey))
+
+    // get the public key in a compressed format
+    pubKey = secp256k1.publicKeyCreate(privKey)
+
+    // sign the message
+    const sigObj = secp256k1.ecdsaSign(msg, privKey)
+
+    // verify the signature
+    console.log(secp256k1.ecdsaVerify(sigObj.signature, msg, pubKey))
   }
 
   

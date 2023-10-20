@@ -1,0 +1,93 @@
+<div class="w-full  d-flex align-items-center h-screen  bg-center  justify-content-center mt-5   m-2" > <!-- bg-[url('/assets/images/banner-bg2.png')]-->
+    <div class="p-2 rounded-xl mt-24 border border-gray-500 " style="box-shadow: 4.0px_8.0px_8.0px_rgba(0,0,0,0.38);">
+      <p class="text-xl font-Grotesk fw-semibold mb-4 bg-gradient-to-r ">
+        List your tokens for sale
+      </p>
+  
+      <form [formGroup]="sellingForm" (ngSubmit)="submit()">
+        
+
+        
+        <div class="mb-5">
+            <div class="input-group input-group-lg mb-3">
+                <label class="input-group-text  " >List Currency</label>
+                <input
+                    class="form-control p-2  rounded-lg "
+                    type="number"
+                    formControlName="amount"
+                    id="amount"
+                    placeholder="2"
+                    />
+                <select class="form-select border border-gray-600 p-2 w-full rounded-lg currency-select"  [(ngModel)]="selectedCoin" formControlName="tokenAddress">
+                  <option selected>Select Crypto...</option>
+                  <option *ngFor="let coin of coins; index as i" class="mt-5" [ngValue]="coin">{{coin.symbol}}</option>
+                </select>
+                
+            </div>
+              
+        </div>
+
+        <div class="mt-5">
+            <div class="input-group input-group-lg mb-3">
+                <label class="input-group-text bg-indigo-500 " >List Price</label>
+                <input
+                    class="border border-gray-400 p-2 w-[18rem] rounded-lg"
+                    type="text"
+                    formControlName="price"
+                    id="price"
+                    placeholder="0.12"
+                />
+                <select class="form-select border border-gray-600 p-2 w-full rounded-lg currency-select " [(ngModel)]="selectedFiat"    formControlName="fiatCurrency">
+                    
+                    <option *ngFor="let fiat of fiatCurrencies; index as i" class="mt-5" [ngValue]="fiat">{{fiat.code}} ({{fiat.name}})</option>
+                </select>
+                
+            </div>
+              
+        </div>
+  
+        
+        <div class="d-flex justify-content-end my-1 mb-4">
+          
+            <div class="text-end  text-sm">
+              per {{selectedCoin?.symbol?? nativeCurrency?.name??'Native Coin' }}
+            </div>
+            
+        </div>
+
+
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title text-indigo-500"><h3 class="text-indigo-500">Summary </h3></div>
+
+                <div class="card-text">
+                    List <span class="numerical-figure">{{fv?.amount??0  | number : '1.0-8'}} {{selectedCoin?.symbol?? nativeCurrency?.name??'Native Coin' }}</span> at 
+                    <span class="numerical-figure">{{fv?.price??0 | number : '1.0-2'}} {{selectedFiat?.code?? 'USD' }} per {{selectedCoin?.symbol?? nativeCurrency?.name??'Native Coin' }}</span>
+                    <br/>
+                    <strong>Total Expected</strong>: <span class="numerical-figure">{{ ( fv?.price  * fv?.amount ) | number : '1.0-8' }} {{selectedFiat?.code?? 'USD' }}</span>
+                </div>
+
+                <div class="card-text d-flex justify-content-end mt-2 px-2">
+                    <button type="submit" [disabled]="sellingForm.invalid" class="bg-primary btn btn-primary py-2 px-4">Confirm Sale</button>
+                </div>
+
+                
+            </div>
+        </div>
+
+
+  
+        <!-- <button
+          
+          class="mt-10  btn btn-primary px-20 uppercase py-2 rounded-md font-Grotesk font-medium hover:scale-105 hover:bg-gray-300 hover:text-black"
+          type="submit"
+          [disabled]="sellingForm.invalid"
+        >
+          List
+        </button> -->
+  
+        
+      </form>
+    </div>
+    
+  </div>

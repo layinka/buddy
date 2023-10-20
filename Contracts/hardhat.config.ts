@@ -109,7 +109,7 @@ const config: HardhatUserConfig = {
 
 		mantle_t: {
 			url: "https://rpc.testnet.mantle.xyz/",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			accounts: process.env.PRIVATE_KEY_MTN !== undefined ? [process.env.PRIVATE_KEY_MTN, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 5001,
 		}, 
 
