@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { getWalletClient, getPublicClient, fetchTransaction } from '@wagmi/core';
+import { getWalletClient, getPublicClient, fetchTransaction, writeContract, waitForTransaction } from '@wagmi/core';
 import { parseEther } from 'ethers/lib/utils';
 
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,6 +14,8 @@ import { P2pService } from 'src/app/services/p2p.service';
 import { Web3Service } from 'src/app/services/web3.service';
 import { environment } from 'src/environments/environment';
 import { zeroAddress, parseAbiItem, parseAbi } from 'viem';
+import { publicClientToProvider } from '../utils/ethers-wagmi-adapter';
+import parseEventLogs from '../utils/parseEventLogs';
 const P2PABI= require( "../../assets/abis/p2p.json");
 // import * as P2PABI from '../../../../../assets/abis/p2p.json';
 
@@ -126,21 +128,44 @@ export class BuyModalComponent {
     
 
     try{
-      const walletClient  = await getWalletClient({
-        chainId: this.w3s.chainId
-      })
+      // const walletClient  = await getWalletClient({
+      //   chainId: this.w3s.chainId
+      // })
       const publicClient = await getPublicClient({
         chainId: this.w3s.chainId
       })
-      const [address] = await walletClient!.getAddresses()
+      const address = this.w3s.account
       
-      // @ts-ignore
-      const { request } = await publicClient.simulateContract({
+      // // @ts-ignore
+      // const { request } = await publicClient.simulateContract({
+        
+      //   abi: P2PABI,
+      //   address: environment.p2pContractAddress[this.w3s.chainId!] as `0x{string}`,
+      //   functionName: 'buyToken',
+      //   account: address,
+      //   args: [
+      //     this.listing.listId,
+      //     parseEther( this.f.amount.value.toString()), 
+      //     'name',
+      //     this.selectedPaymentOption
+      //   ],
+      //   // chain: this.w3s.chainId
+      // })
+
+      
+
+      // const filter = await publicClient.createEventFilter({ 
+      //   address: environment.p2pContractAddress[this.w3s.chainId!] as `0x${string}`,
+      //   event: parseAbiItem('event BuyOrderSubmitted(uint indexed listingId, uint indexed orderId, address buyer )'),
+      //   fromBlock: 'latest'
+      // })
+
+      const {hash} = await writeContract({
         
         abi: P2PABI,
         address: environment.p2pContractAddress[this.w3s.chainId!] as `0x{string}`,
         functionName: 'buyToken',
-        account: address,
+        
         args: [
           this.listing.listId,
           parseEther( this.f.amount.value.toString()), 
@@ -150,33 +175,27 @@ export class BuyModalComponent {
         // chain: this.w3s.chainId
       })
 
-      
-
-      const filter = await publicClient.createEventFilter({ 
-        address: environment.p2pContractAddress[this.w3s.chainId!] as `0x${string}`,
-        event: parseAbiItem('event BuyOrderSubmitted(uint indexed listingId, uint indexed orderId, address buyer )'),
-        fromBlock: 'latest'
-      })
-
-      const hash = await walletClient!.writeContract(request)
-
-      await publicClient.waitForTransactionReceipt( 
+      await waitForTransaction( 
         { hash: hash }
       )
       
+      const provider = publicClientToProvider(publicClient)
+
+      const logs = await parseEventLogs(provider, hash,['event BuyOrderSubmitted(uint indexed listingId, uint indexed orderId, address buyer )'], 'BuyOrderSubmitted')
       const transaction = await fetchTransaction({
         hash,
 
       })
       
       // ...
-      const logs = await publicClient.getFilterLogs({ filter })
-
+      // const logs = await publicClient.getFilterLogs({ filter })
+      // const orderId = logs[0]['args']['orderId'].toString()
+      // const tokenId = logs[0]['args']['receiptTokenId'].toString()
       
       // @ts-ignore
       console.log('orderId Id:', logs[0]['args']['orderId'])
       // @ts-ignore
-      const orderId = logs[0]['args']['orderId'];
+      const orderId = logs[0]['args']['orderId'].toString();
 
       this.spinner.hide();
 

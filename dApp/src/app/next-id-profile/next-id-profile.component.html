@@ -1,0 +1,8 @@
+<ng-container *ngIf="profiles" class="d-flex justify-content-start">
+    <span class="badge text-bg-{{colors[profile.platform.toLowerCase()]}} px-2 py-1 mx-2 my-2" *ngFor="let profile of profiles">
+        <img class="img-fluid img-avtr" [src]="profile.avatar" alt="">
+        {{profile.platform}}
+    </span>
+
+    <span title="Trust Level" class="badge text-bg-primary px-3 m-2 ">{{profiles.length}}</span>
+</ng-container>

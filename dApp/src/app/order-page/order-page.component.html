@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-9">
+
+            <div class="card m-3 mb-4">
+                <div class="card-body" *ngIf="order">
+                    <div class="card-title">Order Info</div>
+
+                    <div class="card-text d-flex justify-content-between">
+                        <div>
+                            <h3 class="text-muted">Total Amount</h3>
+                            <span>{{order.total | number : '1.0-8'}} {{order.priceCurrency}}</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-muted">Price</h3>
+                            <span>{{order.price | number : '1.0-8'}}</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-muted">Quantity</h3>
+                            <span>{{order.amount | number : '1.0-8'}} {{order.tokenSymbol}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card m-3 mb-4">
+                <div class="card-body" *ngIf="order">
+                    <div class="card-title">Payment Method</div>
+
+                    <div class="card-text ">
+                        <div class="row">
+                            <div class="col">
+                            
+                                <div class="border border-gray-400 rounded p-2 " >
+                                    <img [src]="'/assets/images/payment-icons/'+ order.paymentOption.appName + '.png'" class="payment-method-img img-fluid me-1"  alt="{{order.paymentOption.appName}}" />
+                                    <span>{{order.paymentOption.appName}}</span>
+                                </div>
+                            </div>
+    
+                            <div class="col-9">
+                                <h3 class="mb-2">Payment Instruction</h3>
+                                <p>
+                                    {{order.paymentOption.paymentInstruction}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card m-3 mb-4">
+                <div class="card-body" *ngIf="order">
+                    <div class="card-title">Actions</div>
+
+                    <div class="card-text d-flex justify-content-end ">
+
+                        <div class="alert alert-info mx-2 px-2"  *ngIf="order.fulfilled!==true && !order.isSeller && order.paid==true">
+                            Paid <span class="text-muted text-sm">Waiting for release from seller</span>
+                        </div>
+
+                        <div class="alert alert-info mx-2 px-2" disabled *ngIf="order.fulfilled!==true && order.isSeller && order.paid==false">
+                            <span class="text-muted text-sm">Waiting for payment from buyer</span>
+                        </div>
+
+                        <button class="btn btn-outline-primary mx-2 px-2" (click)="markAsPaid()" *ngIf="order.fulfilled!==true && !order.isSeller && order.paid!==true">Mark as Paid</button>
+                        <button class="btn btn-outline-primary mx-2 px-2" (click)="release()" *ngIf="order.fulfilled!==true && order.paid==true && order.isSeller">Release</button>
+                        <button class="btn btn-outline-primary mx-2 px-2">Appeal</button>
+
+                        <div class="alert alert-success mx-2 px-2" *ngIf=" order.fulfilled===true">Completed</div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

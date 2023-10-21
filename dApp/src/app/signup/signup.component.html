@@ -1,34 +1,32 @@
-<div class="h-screen py-28 bg-[#1E1e1e]  bg-center" >
+<div class="h-screen mt-4 p-2 py-28 bg-[#1E1e1e]  bg-center" >
     <div class="w-75 rounded-xl mx-auto p-5 border border-gray-600" > <!--style="background-color: #523ab2;"-->
       <div class="mx-auto  p-2">
 
         <div class="row">
           <div class="col d-flex justify-content-center mb-3 mt-2">
-            <h3>Buddy P2P dAPP</h3>
+            <h3>Sign Up</h3>
           </div>
         </div>
 
         <div class="rounded-xl p-2 justify-between">
           <div>
-            <h2 class="text-3xl font-semibold mb-4">
+            <h4 class="text-3xl text-center font-semibold mb-2">
               Start your crypto journey with us.
-            </h2>
+            </h4>
             <p class="text-gray-300 text-base">
               Easily Swap your FIAT Currency for any Crypto Currency - We support several Payment methods
             </p>
           </div>
         </div>
-        <div class=" py-4" *ngIf="registrationForm">
-          <h2 class="text-3xl bg-gradient-to-r text-transparent bg-clip-text from-[#FD42FB] via-[#CD9ECD] to-[#753FF3]  font-semibold mb-2">
-            Sign up
-          </h2>
+        <div class="mt-3 py-4" *ngIf="registrationForm">
+          
 
-          <div class="alert alert-info" *ngIf="alreadyRegistered">
+          <div class="alert alert-info mb-3" *ngIf="alreadyRegistered">
             You are already registered. Start Trading
           </div>
 
           
-          <form  *ngIf="!alreadyRegistered" [formGroup]="registrationForm" (ngSubmit)="submit($event)">
+          <form  *ngIf="(w3s.account$| async) && !alreadyRegistered " [formGroup]="registrationForm" (ngSubmit)="submit($event)">
             <!-- Name -->
             <div class="form-group">
               <label class="font-semibold text-sm mb-1 text-gray-400" for="name">Name</label>
@@ -144,21 +142,24 @@
         </div>
 
 
-        <div class="card mt-3" *ngIf="alreadyRegistered ">
+        <div class="card mt-3 p-4" *ngIf="alreadyRegistered ">
           <div class="card-body" *ngIf="!profiles || profiles.length<=0">
-            <h4 class="mb-2 text-center">Increase your Trust rating</h4>
-            <h5 class="mb-2 text-center" >Bind your Twitter account to your Next ID</h5>
+            <h4 class="mb-2 text-center text-primary">Increase your Trust rating</h4>
+            <h5 class="mb-2 text-center" >Bind your Ethereum account to your Web3.Bio/Next ID Universal account</h5>
 
-            <div class="d-flex justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-items-center mt-3">
               <button class="btn btn-primary px-4 py-2" (click)="bindEthereum()">Bind Now</button>
             </div>
           </div>
 
           <div class="card-body" *ngIf="profiles && profiles.length>0">
+            <h4 class="mb-3 ">Your Web3.bio Profile</h4>
             <next-id-profile [identity]="w3s.account$ | async"></next-id-profile>
           </div>
           
         </div>
+
+        <!-- <button class="btn btn-primary px-4 py-2" (click)="bindEthereum()">Bind Now</button> -->
 
 
       </div>

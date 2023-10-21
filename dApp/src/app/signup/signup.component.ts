@@ -129,7 +129,7 @@ export class SignupComponent {
 
       
       this.p2pContract = await this.p2p.getP2PContract()      
-      this.alreadyRegistered = await this.p2pContract.read.isRegistered([this.w3s.account])
+      this.alreadyRegistered = await this.p2pContract.read.isRegistered([account])
 
       this.nextIdService.getProfiles(this.w3s.account!).subscribe((profs)=>{
         this.profiles= profs
@@ -183,7 +183,19 @@ export class SignupComponent {
   }
 
   async bindEthereum() {
-    await this.nextIdService.bindEthereum(this.w3s.account!)
+    if(confirm('You will be asked to Sign a message from your Wallet. Proceed? ')){
+      const response = await this.nextIdService.bindEthereum(this.w3s.account!)
+      if(!response){
+        this.toastService.error('Failed', 'There was an error processing your request on Next ID')
+      }else{
+        this.toastService.show('Success', 'Your Profile has been updated successfully on Next ID')
+        this.nextIdService.getProfiles(this.w3s.account!).subscribe((profs)=>{
+          this.profiles= profs
+        }) 
+        
+      }
+    }
+    
   }
   
   // convenience getter for easy access to form fields
